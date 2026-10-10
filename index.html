@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShopHub - Multi Vendor E-Commerce</title>
+<link rel="stylesheet" href="css/style.css">
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+  import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+  window.firebaseApp = initializeApp({
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  });
+  window.auth = getAuth(window.firebaseApp);
+  window.db = getFirestore(window.firebaseApp);
+</script>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="navbar">
+  <div class="logo" onclick="showPage('home')">🛒 ShopHub</div>
+  <nav>
+    <a onclick="showPage('home')">Home</a>
+    <a onclick="showPage('cart')">Cart <span id="cartCount">0</span></a>
+    <a onclick="showPage('orders')" id="ordersLink" style="display:none">My Orders</a>
+    <a onclick="showPage('sellerDash')" id="sellerLink" style="display:none">Seller Dashboard</a>
+    <a onclick="showPage('login')" id="loginLink">Login</a>
+    <a onclick="logout()" id="logoutLink" style="display:none">Logout</a>
+  </nav>
+</header>
+
+<!-- HOME PAGE -->
+<section id="page-home" class="page active">
+  <div class="hero">
+    <h1>Welcome to ShopHub</h1>
+    <p>Buy & Sell Anything</p>
+    <input type="text" id="searchBar" placeholder="Search products..." oninput="renderProducts()">
+  </div>
+  <div id="productGrid" class="grid"></div>
+</section>
+
+<!-- LOGIN / SIGNUP PAGE -->
+<section id="page-login" class="page">
+  <div class="auth-box">
+    <h2 id="authTitle">Login</h2>
+
+    <div class="social-btns">
+      <button onclick="loginWithGoogle()" class="btn-google">🔵 Continue with Google</button>
+      <button onclick="loginWithApple()" class="btn-apple">🍎 Continue with Apple</button>
+    </div>
+
+    <div class="divider">or</div>
+
+    <input type="email" id="authEmail" placeholder="Email">
+    <input type="password" id="authPassword" placeholder="Password">
+
+    <select id="authRole">
+      <option value="buyer">I'm a Buyer</option>
+      <option value="seller">I'm a Seller</option>
+    </select>
+
+    <button onclick="handleAuth()" class="btn-primary" id="authBtn">Login</button>
+    <p class="toggle-text">
+      <span id="toggleText">Don't have account?</span>
+      <a onclick="toggleAuthMode()">Sign Up</a>
+    </p>
+  </div>
+</section>
+
+<!-- SELLER DASHBOARD -->
+<section id="page-sellerDash" class="page">
+  <h2>Seller Dashboard</h2>
+  <div class="seller-form">
+    <h3>Add New Product</h3>
+    <input type="text" id="pName" placeholder="Product Name">
+    <input type="number" id="pPrice" placeholder="Price (₹)">
+    <textarea id="pDesc" placeholder="Description"></textarea>
+    <input type="text" id="pImage" placeholder="Image URL">
+    <button onclick="addProduct()" class="btn-primary">Upload Product</button>
+  </div>
+  <h3>My Products</h3>
+  <div id="myProducts" class="grid"></div>
+</section>
+
+<!-- CART PAGE -->
+<section id="page-cart" class="page">
+  <h2>Your Cart</h2>
+  <div id="cartItems"></div>
+  <div id="cartTotal" class="cart-total"></div>
+  <button onclick="placeOrder()" class="btn-primary" id="checkoutBtn">Place Order</button>
+</section>
+
+<!-- ORDERS PAGE -->
+<section id="page-orders" class="page">
+  <h2>My Orders</h2>
+  <div id="ordersList"></div>
+</section>
+
+<!-- PRODUCT DETAILS MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
